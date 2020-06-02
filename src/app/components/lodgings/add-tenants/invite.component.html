@@ -1,0 +1,16 @@
+<div class="col-lg-6 mx-auto">
+  <h1 class="bg-dark text-white p-2 mb-3">Add Tenants</h1>
+<form (ngSubmit)="onSubmit()" [formGroup]="inviteForm">
+  <div *ngIf="added" class="alert alert-success">
+    <strong>Success!</strong>
+  </div>
+  <div class="form-group">
+    <label>Email</label>
+    <input type="email" formControlName="email" class="form-control">
+  </div>
+
+  <div class="form-group">
+    <button type="submit" class="btn btn-dark" [disabled]="!inviteForm.valid">Add Tenants</button>
+  </div>
+</form>
+</div>

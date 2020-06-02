@@ -1,11 +1,9 @@
-import { Component, OnInit } from '@angular/core';
-import {NgForm} from '@angular/forms';
+import {Component, OnInit} from '@angular/core';
+import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {Router} from '@angular/router';
 import {Lodging} from '../../../models/lodging.model';
-import {LodgingsBuilder} from '../../../models/builders/lodgings.builder';
 import {LodgingsService} from '../../../services/lodgings/lodgings.service';
-import {LodgingsType} from '../../../utils/lodgingsType.enum';
-import {UsersService} from '../../../services/users/users.service';
+import {Address} from '../../../models/address';
 
 @Component({
   selector: 'app-lodging-add',
@@ -14,30 +12,55 @@ import {UsersService} from '../../../services/users/users.service';
 })
 export class LodgingAddComponent implements OnInit {
 
-  constructor(private router: Router, private lodgingService: LodgingsService, private usersService: UsersService) { }
+  constructor(private router: Router, private lodgingService: LodgingsService) { }
+
+  addLodgingsForm: FormGroup;
+  error = false;
 
   ngOnInit() {
+    this.addLodgingsForm = new FormGroup({
+      'lodging_name': new FormControl(null, Validators.required),
+      'lodging_type': new FormControl(null, Validators.required),
+      'daily_price': new FormControl(null, Validators.required),
+      'electricity_bill': new FormControl(null, Validators.required),
+      'gas_bill': new FormControl(null, Validators.required),
+      'telecommunication_bill': new FormControl(null, Validators.required),
+      'cleaning_cost': new FormControl(null, Validators.required),
+      'address': new FormGroup({
+        'country': new FormControl(null, Validators.required),
+        'city': new FormControl(null, Validators.required),
+        'zip_code': new FormControl(null, Validators.required),
+        'address': new FormControl(null, Validators.required),
+      }),
+    });
+   this.addLodgingsForm.controls['lodging_type'].setValue('APARTMENT',{onlySelf: true});
   }
 
-  onSubmit(form: NgForm){
-    console.log(form.value['address']);
-    const lodging: Lodging = new LodgingsBuilder(1)
-                              .setCity(form.value['city'])
-                              .setAddress(form.value['address'])
-                              .setCleaningCost((<number>form.value['cleaning_cost']))
-                              .setCountry(form.value['country'])
-                              .setElectricityBill(<number>form.value['electricity_bill'])
-                              .setGasBill(<number>form.value['gas_bill'])
-                              .setLodgingsType(LodgingsType.APARTMENT)
-                              .setName(form.value['lodging_name'])
-                              .setPricePerDay(<number>form.value['daily_price'])
-                              .setTelecommunicationBill(<number>form.value['telecommunication_bill'])
-                              .setZipCode(form.value['zip_code'])
-      .build();
+  onSubmit(){
+    const data = this.addLodgingsForm.value;
+    console.log(this.addLodgingsForm.value);
+    const lodging: Lodging = new Lodging();
+    lodging.name = data['lodging_name'];
+    lodging.lodgingsType = data['lodging_type'];
+    lodging.pricePerDay = data['daily_price'];
+    lodging.electricityBill = data['electricity_bill'];
+    lodging.gasBill = data['gas_bill'];
+    lodging.telecommunicationBill = data['telecommunication_bill'];
+    lodging.cleaningCost = data['cleaning_cost'];
+    lodging.fullAddress = new Address(data['address']['country'], data['address']['city'], data['address']['zip_code'], data['address']['address']);
 
-    this.usersService.addLodgings(lodging);
-    this.lodgingService.addLodgings(lodging);
-    this.router.navigate(['lodgings']);
+
+    this.lodgingService.addLodgings(lodging).subscribe(
+      (response) => {
+        console.log(response);
+        this.error = false;
+        this.router.navigate(['/lodgings/own']);
+      },
+      (error) => {
+        console.log(error);
+        this.error = true;
+      }
+    );
   }
 
 }

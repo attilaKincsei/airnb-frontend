@@ -1,5 +1,21 @@
-<div class="panel panel-default" *ngFor="let lodging of lodgings">
-  <div class="panel-heading">
-    <a [routerLink]="[lodging.id]">{{lodging.name}}</a>
-  </div>
-</div>
+
+<h1>{{title}} Lodgings</h1>
+
+<table class="table table-striped table-dark">
+  <thead>
+  <tr>
+    <th>ID</th>
+    <th>Name</th>
+    <th>Type</th>
+    <th>Action</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr *ngFor="let lodging of lodgings">
+    <td>{{lodging.id}}</td>
+    <td>{{lodging.name}}</td>
+    <td>{{lodging.lodgingsType}}</td>
+    <td><a [routerLink]="['/lodgings', lodging.id]" class="btn btn-light text-dark">Details</a></td>
+  </tr>
+  </tbody>
+</table>

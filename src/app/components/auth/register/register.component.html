@@ -1,75 +1,76 @@
+<div class="row">
 
-  <div class="col-lg-6 col-lg-offset-3">
-    <h3 class="bg-success text-white p-5">Registration</h3>
-    <div>Only letters of English alphabet, numbers and underscore can be used in registration input fields</div>
-    <form (ngSubmit)="onSubmit(register)" #register="ngForm" ngNativeValidate>
+  <div class="col-lg-6 mx-auto">
+    <h3 class="bg-dark text-white p-2">Registration</h3>
+
+    <form (ngSubmit)="onSubmit()" [formGroup]="editUserForm" >
       <div class="form-group mx-auto">
 
-        <div>
-          <label for="first-name">First Name</label>
-          <input id="first-name" class="form-control" type="text" name="first_name" placeholder="Length: minimum 1 maximum 255 characters"
-                 pattern="^[a-zA-Z][a-zA-Z0-9-_\.]{1,255}$" required ngModel>
-        </div>
-        <br>
-
-        <div>
-          <label for="surname">Surname</label>
-          <input id="surname" class="form-control" type="text" name="surname" placeholder="Length: minimum 1 maximum 255 characters"
-                 pattern="^[a-zA-Z][a-zA-Z0-9-_\.]{1,255}$" required ngModel>
-        </div>
-        <br>
-
-        <div id="status_selection">
-          <label for="user-type">I am registering as a: </label>
-          <select id="user-type" name="user_type" [ngModel]="'LANDLORD'">
-            <option value="LANDLORD" selected>Landlord</option>
-            <option value="PROPERTY_MANAGER">Property Manager</option>
-            <option value="TENANT">Tenant</option>
-          </select>
-        </div>
-        <br>
-
-        <div>
-          <label id="email-address-label" for="email-address">Email Address</label>
-          <input id="email-address" class="form-control" name="email" type="email"
-                 pattern="[a-z0-9._%+-]{1,100}+@[a-z0-9.-]{1.100}+\.[a-z]{2,3}$" placeholder="pattern: som3thing@s0mething.som" required
-                 ngModel><br>
-
+        <div class="form-group">
+          <label for="first-name">User Name</label>
+          <input id="username" class="form-control" type="text" name="username"
+                 placeholder="Length: minimum 4 maximum 20 characters"
+                 formControlName="username">
+          <span *ngIf="!editUserForm.get('username').valid && editUserForm.get('username').touched"
+                class="help-block">Please enter a valid username!</span>
         </div>
 
-        <label for="password">Password (must contain at least  one UpperCase, LowerCase, Number/SpecialChar. Min 8 max 255 characterss)</label>
-        <input id="password" class="form-control" type="password" name="password" placeholder="Length: minimum 1 maximum 255 characterss; e.g.: abc1Dfgh"
-               pattern="(?=^.{8,255}$)((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$" required ngModel><br>
-
-
-        <label id="password-confirmation-label" for="password_confirmation">Confirm Password</label>
-        <input id="password_confirmation" class="form-control" type="password" name="password_confirmation" placeholder="has to match previous field value"
-               pattern="(?=^.{8,255}$)((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$" required ngModel><br>
-
-        <label for="phone-input">Phone Number</label>
-        <input id="phone-input" class="form-control" type="tel" name="phone_number" placeholder="pattern: +36205561234"
-               pattern="[+]{1}[0-9]{7,254}" required ngModel><br>
 
         <div class="form-group">
-
-          <label for="country-input">Country</label>
-          <input id="country-input" class="form-control" type="text" name="country" placeholder="Length: minimum 1 maximum 255 characters"
-                 pattern="^[\w\.\/_%-]{1,255}$" required ngModel><br>
-
-          <label for="city-input">City</label>
-          <input id="city-input" class="form-control" type="text" name="city" placeholder="Length: minimum 1 maximum 255 characters"
-                 pattern="^[\w\.\/\s_%-]{1,255}$" required ngModel><br>
-
-          <label for="zip-input">Zip code</label>
-          <input id="zip-input" class="form-control" type="text" name="zip_code" placeholder="Length: minimum 1 maximum 255 characters"
-                 pattern="^[\w\.\/\s_%-]{1,255}$" required ngModel><br>
-
-          <label for="address-input">Address</label>
-          <input id="address-input" class="form-control" type="text" name="address" placeholder="Length: minimum 1 maximum 255 characters"
-                 pattern="^[\w\.\/\s_%-]{1,255}$" required ngModel>
+          <label for="first-name">First Name</label>
+          <input id="first-name" class="form-control" type="text" name="first_name" placeholder="Length: minimum 4 maximum 20 characters"
+                 formControlName="first_name">
+          <span *ngIf="!editUserForm.get('first_name').valid && editUserForm.get('first_name').touched"
+                class="help-block">Please enter a valid first name!</span>
         </div>
 
-        <button value="Submit" id="submit" class="btn btn-primary btn-block" [disabled]="!register.valid">Submit</button>
+        <div class="form-group">
+          <label for="surname">Surname</label>
+          <input id="surname" class="form-control" type="text" name="surname" placeholder="Length: minimum 4 maximum 20 characters"
+                 formControlName="surname">
+          <span *ngIf="!editUserForm.get('surname').valid && editUserForm.get('surname').touched"
+                class="help-block">Please enter a valid surname!</span>
+        </div>
+
+        <div class="form-group">
+          <label id="email-address-label" for="email-address">Email Address</label>
+          <input id="email-address" class="form-control" name="email" type="email"
+                 placeholder="pattern: som3thing@s0mething.com"
+                 formControlName="email" >
+          <span *ngIf="!editUserForm.get('email').valid && editUserForm.get('email').touched"
+                class="help-block">Please enter a valid first name!</span>
+
+        </div>
+
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input id="password" class="form-control" type="password" name="password" placeholder="Length: minimum 8 characters!"
+                 formControlName="password">
+          <span *ngIf="!editUserForm.get('password').valid && editUserForm.get('password').touched"
+                class="help-block">Please enter a valid password!</span>
+        </div>
+
+
+        <div class="form-group">
+          <label id="password-confirmation-label" for="password_confirmation">Confirm Password</label>
+          <input id="password_confirmation"  class="form-control" type="password" name="password_confirmation" placeholder="has to match previous field value"
+                 formControlName="password_confirmation" >
+        </div>
+
+
+        <div class="form-group">
+          <label for="phone-input">Phone Number</label>
+          <input id="phone-input" class="form-control" type="tel" name="phone_number" placeholder="pattern: +36205561234"
+                 pattern="[+]{1}[0-9]{7,254}"  formControlName="phone_number">
+          <span *ngIf="!editUserForm.get('phone_number').valid && editUserForm.get('phone_number').touched"
+                class="help-block">Please enter a valid phone number</span>
+        </div>
+
+        <div class="form-group">
+          <button value="Submit" id="submit" class="btn btn-dark btn-block" [disabled]="!editUserForm.valid">Submit</button>
+        </div>
       </div>
     </form>
   </div>
+</div>
+

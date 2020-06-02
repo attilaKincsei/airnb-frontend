@@ -1,23 +1,22 @@
 <table class="table">
-  <thead>
+  <thead class="thead-dark text-white">
     <tr>
-      <th>Lodgings name</th>
       <th>ToDo</th>
       <th>Description</th>
       <th>Price</th>
       <th>Deadline</th>
       <th>Status</th>
-      <th>Action</th>
+      <th colspan="2">Action</th>
     </tr>
   </thead>
   <tbody *ngFor="let todo of todos">
-    <tr>
-      <td>{{todo.lodgings.name}}</td>
+    <tr [ngClass]="(isTodoDone(todo)) ? 'bg-success' : 'bg-warning'">
       <td>{{todo.name}}</td>
-      <td>{{todo.deadline}}</td>
       <td>{{todo.description}}</td>
       <td>{{todo.price}}</td>
+      <td>{{todo.deadline}}</td>
       <td>{{todo.status.toString()}}</td>
+      <td *ngIf="!isTodoDone(todo)"><button class="btn btn-success" (click)="markAsDone(todo)">Done</button></td>
       <td><button class="btn btn-danger" (click)="deleteTodo(todo.id)">Delete</button></td>
     </tr>
   </tbody>

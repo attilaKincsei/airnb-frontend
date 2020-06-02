@@ -1,11 +1,16 @@
 import { Injectable } from '@angular/core';
 import {User} from '../../models/user.model';
-import {UserBuilder} from '../../models/builders/user.builder';
-import {Subject} from 'rxjs';
-import {Todo} from '../../models/todo.model';
+import {Observable} from 'rxjs';
 import {Lodging} from '../../models/lodging.model';
 import {LodgingsService} from '../lodgings/lodgings.service';
-import {Http} from '@angular/http';
+import {HttpClient, HttpHeaders} from '@angular/common/http';
+import {TokenStorageService} from '../auth/token-storage/token-storage.service';
+import {UserInfo} from '../../utils/user-info';
+import {Todo} from '../../models/todo.model';
+
+const httpOptions = {
+  headers: new HttpHeaders({ 'Content-Type': 'application/json' })
+};
 
 @Injectable({
   providedIn: 'root'
@@ -13,48 +18,34 @@ import {Http} from '@angular/http';
 export class UsersService {
 
   private _user: User;
+  private baseUrl = 'http://localhost:8080/api/user/';
 
-  usersChanged = new Subject<User[]>();
-
-  constructor(private lodgingsService: LodgingsService, private http: Http) {
-
-  }
-
-  getUserById(id: number): User {
-    return null;
-  }
-
-  deleteUser(id: number) {
-    const userToRemove: User = this.getUserById(id);
-  }
-
-  getUser() {
-    return this._user;
-  }
-
-  registerUser(user: User) {
+  constructor(private lodgingsService: LodgingsService, private http: HttpClient, private tokenStorage: TokenStorageService) {
 
   }
 
-  loginUser(emaill: string, password: string) {
-    return true;
+  getUserLodgingsFromServer(): Observable<Lodging[]> {
+    return this.http.get<Lodging[]>(this.baseUrl + this.tokenStorage.getUsername() + '/lodgings');
   }
 
-  addLodgings(lodging: Lodging){
-    this._user.addLodging(lodging);
+  getLandlordLodgingsFromServer(): Observable<Lodging[]> {
+    return this.http.get<Lodging[]>(this.baseUrl + this.tokenStorage.getUsername() + '/landlord');
   }
 
-  deleteUsersLodgings(){
-    const lodgings: Lodging[] = this._user.lodgings;
-    if (lodgings.length !== 0) {
-      for (let i = 0; i < lodgings.length; i++) {
-        this.lodgingsService.deleteLodgings(lodgings[i].id);
-      }
-    }
+
+  getUserTodosFromServer(): Observable<Todo[]> {
+    return this.http.get<Todo[]>(this.baseUrl + this.tokenStorage.getUsername() + '/todos');
   }
 
   getUserFromDB() {
-     return this.http.get('http://localhost:8080/api/user');
+     return this.http.get<User>(this.baseUrl + this.tokenStorage.getUsername());
   }
 
+  updateUserInfo(userInfo: UserInfo) {
+    return this.http.put<User>(this.baseUrl + this.tokenStorage.getUsername(), userInfo);
+  }
+
+  deleteUserFromDB() {
+    return this.http.delete<string>(this.baseUrl + this.tokenStorage.getUsername());
+  }
 }

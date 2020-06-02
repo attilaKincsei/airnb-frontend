@@ -1,12 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import {NgForm} from '@angular/forms';
-import {Lodging} from '../../../models/lodging.model';
-import {LodgingsBuilder} from '../../../models/builders/lodgings.builder';
-import {LodgingsType} from '../../../utils/lodgingsType.enum';
+import {AbstractControl, FormControl, FormGroup, NgForm, Validators} from '@angular/forms';
 import {UsersService} from '../../../services/users/users.service';
-import {User} from '../../../models/user.model';
-import {UserBuilder} from '../../../models/builders/user.builder';
 import {Router} from '@angular/router';
+import {UserInfo} from '../../../utils/user-info';
+import {Address} from '../../../models/address';
+import {AuthService} from '../../../services/auth/auth.service';
+import {PasswordMatcher} from '../../../utils/PasswordMatcher';
 
 @Component({
   selector: 'app-register',
@@ -15,27 +14,48 @@ import {Router} from '@angular/router';
 })
 export class RegisterComponent implements OnInit {
 
-  constructor(private userService: UsersService, private router: Router) { }
+  constructor(private userService: UsersService, private router: Router, private authService: AuthService) { }
+
+  editUserForm: FormGroup;
 
   ngOnInit() {
+    this.editUserForm = new FormGroup({
+      'username': new FormControl(null, [Validators.required, Validators.minLength(4), Validators.maxLength(20)]),
+      'first_name': new FormControl(null, [Validators.required, Validators.minLength(4), Validators.maxLength(20)]),
+      'surname': new FormControl(null, [Validators.required, Validators.minLength(4), Validators.maxLength(20)]),
+      'email': new FormControl(null, [Validators.required, Validators.email]),
+      'password': new FormControl(null, [Validators.required, Validators.minLength(8)]),
+      'password_confirmation': new FormControl(null, [Validators.required, Validators.minLength(8)]),
+      'phone_number': new FormControl(null, [Validators.required, Validators.minLength(12)]),
+    }, PasswordMatcher.MatchPassword);
   }
 
-  onSubmit(form: NgForm){
-    const user: User = new UserBuilder(1)
-      .setFirstName(form.value['first_name'])
-      .setSurname(form.value['surname'])
-      .setUserType(form.value['user_type'])
-      .setEmail(form.value['email'])
-      .setPassword(form.value['password'])
-      .setPhoneNumber(form.value['phone_number'])
-      .setCountry(form.value['country'])
-      .setCity(form.value['city'])
-      .setZipCode(form.value['zip_code'])
-      .setAddress(form.value['address'])
-      .builder();
+  onSubmit(){
 
-    this.userService.registerUser(user);
-    this.router.navigate(['login']);
+    const data = this.editUserForm.value;
+    const signUpFOrm = new UserInfo(
+      data['username'],
+      data['first_name'],
+      data['surname'],
+      data['email'],
+      data['phone_number'],
+      data['password']
+    );
+
+    console.log(data);
+    this.authService.signUp(signUpFOrm).subscribe(
+      data => {
+        this.router.navigate(['/login']);
+
+      },
+      error => {
+        console.log(error);
+
+      }
+    );
   }
+
+
+
 
 }
