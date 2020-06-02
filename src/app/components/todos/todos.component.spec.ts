@@ -22,4 +22,8 @@ describe('TodosComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  it('get todos', () => {
+
+  });
 });

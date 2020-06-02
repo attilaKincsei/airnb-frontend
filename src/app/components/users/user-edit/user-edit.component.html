@@ -1,0 +1,65 @@
+<div class="col-lg-6 mx-auto">
+  <h3 class="bg-dark text-white p-2">{{user.username}} Profile</h3>
+  <form (ngSubmit)="onSubmit()" [formGroup]="editUserForm" >
+    <div class="form-group mx-auto">
+
+      <div class="form-group">
+        <label for="first-name">First Name</label>
+        <input id="first-name" class="form-control" type="text" name="first_name"
+               formControlName="first_name">
+        <span *ngIf="!editUserForm.get('first_name').valid && editUserForm.get('first_name').touched"
+              class="help-block">Please enter a valid first name!</span>
+      </div>
+      
+
+      <div class="form-group">
+        <label for="surname">Surname</label>
+        <input id="surname" class="form-control" type="text" name="surname"
+               formControlName="surname">
+        <span *ngIf="!editUserForm.get('surname').valid && editUserForm.get('surname').touched"
+              class="help-block">Please enter a valid surname!</span>
+      </div>
+      
+
+      <div class="form-group">
+        <label id="email-address-label" for="email-address">Email Address</label>
+        <input id="email-address" class="form-control" name="email" type="email"
+               formControlName="email" >
+        <span *ngIf="!editUserForm.get('email').valid && editUserForm.get('email').touched"
+              class="help-block">Please enter a valid first name!</span>
+
+      </div>
+
+      <div class="form-group">
+
+        <label for="password">Password (remain the same as before if you don't change it)</label>
+        <input id="password" class="form-control" type="password" name="password"
+               formControlName="password">
+        <span *ngIf="!editUserForm.get('password').valid && editUserForm.get('password').touched"
+              class="help-block">Please enter a valid password!</span>
+      </div>
+
+
+     <div class="form-group">
+       <label id="password-confirmation-label" for="password_confirmation">Confirm Password</label>
+       <input id="password_confirmation"  class="form-control" type="password" name="password_confirmation"
+              formControlName="password_confirmation" >
+       <span *ngIf=" (!editUserForm['MatchPassword'] && editUserForm.get('password_confirmation').touched) || (!editUserForm.get('password_confirmation').valid &&  editUserForm.get('password_confirmation').touched)
+       " class="help-block">Please enter the same password! </span>
+     </div>
+
+
+      <div class="form-group">
+        <label for="phone-input">Phone Number</label>
+        <input id="phone-input" class="form-control" type="tel" name="phone_number"
+               formControlName="phone_number">
+        <span *ngIf="!editUserForm.get('phone_number').valid && editUserForm.get('phone_number').touched"
+              class="help-block">Please enter a valid phone number</span>
+      </div>
+
+      <div class="form-group">
+        <button value="Submit" id="submit" class="btn btn-dark btn-block" [disabled]="!editUserForm.valid">Save</button>
+      </div>
+    </div>
+  </form>
+</div>

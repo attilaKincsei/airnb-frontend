@@ -1,3 +1,85 @@
-<p>
-  lodging-details works!
-</p>
+<div class="mb-1">
+  <button [routerLink]="['/lodgings', lodging.id, 'edit']" *ngIf="isLandlord" class="btn btn-success mr-2">Edit Lodgings</button>
+  <button *ngIf="lodging.tenants !== null && isLandlord"  class="btn btn-danger" (click)="removeTenants(lodging.id)">Remove Tenants</button>
+  <button *ngIf="lodging.tenants === null && isLandlord" [routerLink]="['/lodgings', lodging.id, 'addTenants']" class="btn btn-success">Add Tenants</button>
+</div>
+
+<h3 class="bg-dark text-white p-2 mb-2">{{lodging.name}}</h3>
+
+<div class="row">
+  <div class="col-md-4">
+    <div class="card">
+      <div class="card-header">
+        Info
+      </div>
+      <div class="card-body">
+          <ul class="list-group list-group-flush">
+            <li class="list-group-item"><b>Landlord:</b> {{lodging.landlord.firstName}} {{lodging.landlord.surname}}</li>
+            <li class="list-group-item" *ngIf="lodging.tenants !== null"><b>Tenants:</b> {{lodging.tenants.firstName}} {{lodging.tenants.surname}}</li>
+          </ul>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-4">
+    <div class="card">
+      <div class="card-header">
+        Address
+      </div>
+      <div class="card-body">
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item"><b>Country:</b> {{lodging.fullAddress.country}}</li>
+          <li class="list-group-item"><b>City:</b> {{lodging.fullAddress.city}}</li>
+          <li class="list-group-item"><b>Address:</b> {{lodging.fullAddress.address}}</li>
+          <li class="list-group-item"><b>ZipCode:</b> {{lodging.fullAddress.zipCode}}</li>
+          <li class="list-group-item"><b>Lodgings Type:</b> {{lodging.lodgingsType}}</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-4">
+    <div class="card">
+      <div class="card-header">
+        Overhead Costs
+      </div>
+      <div class="card-body">
+        <li class="list-group-item"><b>Cleaning Cost:</b> {{lodging.cleaningCost}}</li>
+        <li class="list-group-item"><b>Electricity Bill:</b> {{lodging.electricityBill}}</li>
+        <li class="list-group-item"><b>Gas Bill:</b> {{lodging.gasBill}}</li>
+        <li class="list-group-item"><b>Telecommunication Bill:</b> {{lodging.telecommunicationBill}}</li>
+        <li class="list-group-item"><b>Price Per Day:</b> {{lodging.pricePerDay}}</li>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<button  (click)="addTodo()"  class="btn btn-success btn-space mb-1 mt-3" name="lodgingsId">New Todo</button>
+<div>
+  <h3 class="bg-dark text-white p-2">Lodgings Todos</h3>
+  <table class="table">
+    <thead class="thead-dark text-white">
+      <tr>
+        <th>Title</th>
+        <th>Description</th>
+        <th>Deadline</th>
+        <th>Price</th>
+        <th>Status</th>
+        <th colspan="2">Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let todo of sortByStatus()" [ngClass]="(isTodoDone(todo)) ? 'bg-success' : 'bg-warning'">
+        <td>{{todo.name}}</td>
+        <td>{{todo.description}}</td>
+        <td>{{todo.deadline}}</td>
+        <td>{{todo.price}}</td>
+        <td>{{todo.status}}</td>
+        <td><button class="btn btn-success" *ngIf="(!isTodoDone(todo)) && (isLandlord==true)" (click)="markAsDone(todo)">Mark</button></td>
+        <td><button class="btn btn-danger" (click)="deleteToDo(todo.id)">Delete</button></td>
+      </tr>
+    </tbody>
+  </table>
+</div>

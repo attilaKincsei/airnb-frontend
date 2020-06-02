@@ -1,31 +1,41 @@
 import { Injectable } from '@angular/core';
 import {Lodging} from '../../models/lodging.model';
-import {LodgingsBuilder} from '../../models/builders/lodgings.builder';
-import {LodgingsType} from '../../utils/lodgingsType.enum';
-
+import {Observable} from 'rxjs';
+import {HttpClient} from '@angular/common/http';
+import {TokenStorageService} from '../auth/token-storage/token-storage.service';
+import {InviteForm} from '../../utils/InviteForm';
+import {User} from '../../models/user.model';
 @Injectable({
   providedIn: 'root'
 })
 export class LodgingsService {
 
-  private lodgings: Lodging[] = [
-    new LodgingsBuilder(1)
-      .setName('sanyi')
-      .setLodgingsType(LodgingsType.APARTMENT)
-      .setCountry('Hungary')
-      .setCity('Budapest')
-      .build(),
-    new LodgingsBuilder(2)
-      .setName('laci')
-      .setLodgingsType(LodgingsType.FAMILY_HOUSE)
-      .setCountry('Hungary')
-      .setCity('Szeged')
-      .build(),
-  ];
+  constructor(private http: HttpClient, private tokenStorage: TokenStorageService) { }
 
-  constructor() { }
+  private baseUrl = 'http://localhost:8080/api/lodgings/';
 
-  getAllLodgings() {
-    return this.lodgings.slice();
+  getLodgingsById(id: number): Observable<Lodging> {
+    return this.http.get<Lodging>(this.baseUrl + id.toString());
+  }
+
+
+  addLodgings(lodging: Lodging) {
+    return this.http.post<Lodging>(this.baseUrl + this.tokenStorage.getUsername(), lodging);
+  }
+
+  updateLodgings(lodging: Lodging) {
+    return this.http.put<Lodging>(this.baseUrl + lodging.id, lodging);
+  }
+
+  deleteLodgings(id: number) {
+    return this.http.delete<string>(this.baseUrl + id);
+  }
+
+  sendNewEnvite(invite: InviteForm) {
+    return this.http.post<InviteForm>(this.baseUrl + 'add-tenants', invite);
+  }
+
+  removeTenants(lodgingsId: number) {
+    return this.http.delete(this.baseUrl + lodgingsId + '/removeTenants');
   }
 }

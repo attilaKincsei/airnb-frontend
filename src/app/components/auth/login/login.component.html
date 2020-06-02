@@ -1,0 +1,21 @@
+<div class="row">
+  <div class="col-lg-6 mx-auto">
+    <h3 class="bg-dark text-white p-2">Login</h3>
+    <form (ngSubmit)="onSubmit()" [formGroup]="loginForm">
+      <div class="form-group mx-auto">
+        <h4 class="color-text-red" ></h4>
+        <label for="email-login">Username</label>
+        <input id="email-login" class="form-control" placeholder="Enter email address" type="text" name="username"
+               formControlName="username"><br>
+
+        <label for="password-login">Password</label>
+        <input id="password-login" class="form-control" placeholder="Enter password" type="password" name="password"
+               formControlName="password"><br>
+      </div>
+      <button class="btn btn-dark btn-block" [disabled]="!loginForm.valid">Login</button>
+    </form>
+    <div class="mt-1">
+      <a routerLink="/registration" class="btn btn-secondary btn-block">Registration</a>
+    </div>
+  </div>
+</div>
